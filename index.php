@@ -35,7 +35,7 @@ if (isset($_SESSION['sessionAccessToken'])) {
     );
     $dataService->updateOAuth2Token($accessToken);
     $oauthLoginHelper = $dataService -> getOAuth2LoginHelper();
-    $CompanyInfo = $dataService->getCompanyInfo();
+    // $CompanyInfo = $dataService->generateInvoice();
 }
 
 ?>
@@ -85,10 +85,21 @@ if (isset($_SESSION['sessionAccessToken'])) {
 
 
         var apiCall = function() {
-            this.getCompanyInfo = function() {
-                /*
-                AJAX Request to retrieve getCompanyInfo
-                 */
+            this.generateInvoice = function() {
+                
+                var jobCode      = document.getElementById("jobCode").value;
+                var CustomerName = document.getElementById("CustomerName").value;
+                $.ajax({
+                    type: "POST",
+                    url: "apiCall.php",
+                    data:{jobCode : jobCode, CustomerName : CustomerName},
+                }).done(function( msg ) {
+                    $( '#apiCall' ).html( msg );
+                });
+            }
+
+            this.generate = function() {
+              
                 $.ajax({
                     type: "GET",
                     url: "apiCall.php",
@@ -126,8 +137,8 @@ if (isset($_SESSION['sessionAccessToken'])) {
 
     <div class="well text-center">
 
-        <h1>QuickBooks HelloWorld sample application</h1>
-        <h2>Demonstrate Connect to QuickBooks flow and API Request</h2>
+        <h1>GharPar Invoice to Quickbook</h1>
+        <h2></h2>
 
         <br>
 
@@ -143,10 +154,14 @@ if (isset($_SESSION['sessionAccessToken'])) {
     <hr />
 
 
-    <h2>Make an API call</h2>
+    <h2>Generate Invoice</h2>
     <p>If there is no access token or the access token is invalid, click either the <b>Connect to QuickBooks</b> button above.</p>
+    
+    <input type="text" id="jobCode" placeholder="JobCode"/>
+    <input type="text" id="CustomerName" placeholder="CustomerName"/>
+    <button  type="button" class="btn btn-success" onclick="apiCall.generateInvoice()">Generate Invoice</button>
+
     <pre id="apiCall"></pre>
-    <button  type="button" class="btn btn-success" onclick="apiCall.getCompanyInfo()">Get Company Info</button>
 
     <hr />
 
