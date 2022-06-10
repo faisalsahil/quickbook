@@ -1,4 +1,3 @@
-[![Rate your Sample](views/Ratesample.png)][ss1][![Yes](views/Thumbup.png)][ss2][![No](views/Thumbdown.png)][ss3]
 
 Intuit OAuth2.0 and OpenID Connect Demo in PHP
 ==========================================================
