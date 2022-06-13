@@ -18,6 +18,6 @@ return array(
     'client_id' => 'AB2tlEjmTY0eFagNWk3T4OHbaArDvV3tuodmXM5dpOGIkIjToV',
     'client_secret' => 'YwsYFwIyQkbecfKkaQzdI3R1bCTTShtbwtCwr1BD',
     'oauth_scope' => 'com.intuit.quickbooks.accounting com.intuit.quickbooks.payment openid profile email phone address',
-    'oauth_redirect_uri' => 'https://demoapi.gharpar.co/quickbook/callback.php',
+    'oauth_redirect_uri' => 'https://demoquickbook.gharpar.co/quickbook/callback.php',
 )
 ?>
