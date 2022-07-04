@@ -229,6 +229,7 @@ function invoiceAndBilling()
 
 }
 
+print_r('Called');
 $result = invoiceAndBilling();
 
 ?>

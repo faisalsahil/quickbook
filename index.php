@@ -98,6 +98,16 @@ if (isset($_SESSION['sessionAccessToken'])) {
                 });
             }
 
+            this.clearData = function() {
+                
+                var jobCode      = document.getElementById("jobCode");
+                var CustomerName = document.getElementById("CustomerName");
+                
+                jobCode.value      = null;
+                CustomerName.value = null;
+                
+            }
+
             this.generate = function() {
               
                 $.ajax({
@@ -158,8 +168,9 @@ if (isset($_SESSION['sessionAccessToken'])) {
     <p>If there is no access token or the access token is invalid, click either the <b>Connect to QuickBooks</b> button above.</p>
     
     <input type="text" id="jobCode" placeholder="JobCode"/>
-    <input type="text" id="CustomerName" placeholder="CustomerName"/>
+    <input type="text" id="CustomerName" placeholder="BeauticianName"/>
     <button  type="button" class="btn btn-success" onclick="apiCall.generateInvoice()">Generate Invoice</button>
+    <button  type="button" class="btn btn-warning" onclick="apiCall.clearData()">Clear</button>
 
     <pre id="apiCall"></pre>
 
