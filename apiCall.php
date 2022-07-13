@@ -117,17 +117,17 @@ function invoiceAndBilling()
     foreach ($Service_items as $key => $item) {
         $id   = 0;
         $name = '';
-        
+
         foreach($item as $key => $myObjectValues){
             if($key == 'Id'){$id = $myObjectValues;}
             if($key == 'Name'){$name =  $myObjectValues;}
         }
 
         if($id != 0 ){
-            array_push($services_array, (object)[ 'id' => $id, 'name' => urlencode($name) ]);    
+            array_push($services_array, (object)[ 'id' => $id, 'name' => urlencode($name) ]);
         }
     }
-    
+
     // print_r($services_array);
     $services_array = json_encode($services_array);
 
@@ -135,21 +135,20 @@ function invoiceAndBilling()
 
      // Get CustomerRef
     // KalsoomUmar(GP1153)
-    $customerRef = $dataService->Query("select * from Customer Where CompanyName='". $_POST['CustomerName']."'");
-    foreach ($customerRef[0] as $key => $myObjectValues) {
-        if($key == 'Id'){
-            $customer_id = $myObjectValues;
-        }        
-    }
+    // $customerRef = $dataService->Query("select * from Customer Where CompanyName='". $_POST['CustomerName']."'");
+    // foreach ($customerRef[0] as $key => $myObjectValues) {
+    //     if($key == 'Id'){
+    //         $customer_id = $myObjectValues;
+    //     }
+    // }
 
 
-    // Sending to GP Server to get Job data
+    //Sending to GP Server to get Job data
     $ch         = curl_init();
-    $parameters = "job_code=". $_POST['jobCode'] ."&customer_id=".$customer_id."&services=". $services_array;
-    // $url        = "https://api.gharpar.co/admin/api/v2/quickbooks.json";
-    $url        = "https://demoapi.gharpar.co/admin/api/v2/quickbooks.json";
+    $parameters = "job_code=". $_POST['jobCode'] ."&beautician_id=".$_POST['beautician_id']."&services=". $services_array;
     // $url        = "http://192.168.1.28:3000/admin/api/v2/quickbooks.json";
-    
+    $url        = "http://demoapi.gharpar.co/admin/api/v2/quickbooks.json";
+
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -157,31 +156,6 @@ function invoiceAndBilling()
     curl_close ($ch);
     $data = json_decode($data, true);
 
-    // print_r($data);
-    
-     
-
-    /* Sample Code to Create Invoice
-     * 2. Create Invoice using the CustomerRef and ItemRef
-     */
-    // $invoiceObj = Invoice::create([
-    //     "Line" => [
-    //         "Amount" => 500.00,
-    //         "DetailType" => "SalesItemLineDetail",
-    //         "SalesItemLineDetail" => [
-    //             "Qty" => 2,
-    //             "ItemRef" => [
-    //                 "value" => 1
-    //             ]
-    //         ]
-    //     ],
-    //     "CustomerRef"=> [
-    //         "value"=> 2
-    //     ],
-    //     "BillEmail" => [
-    //         "Address" => "author@intuit.com"
-    //     ]
-    // ]);
 
 
     // Code for Invoice Creation
@@ -191,45 +165,10 @@ function invoiceAndBilling()
     // echo "Created invoice Id={$invoiceId}. Reconstructed response body below:\n";
     $result = json_encode($resultingInvoiceObj, JSON_PRETTY_PRINT);
 
-    print_r("Ivoice#". $resultingInvoiceObj->DocNumber . " has been created successfully");
-
-
-    /*
-     * 3. Email Invoice to customer
-     */
-    // $resultingMailObj = $dataService->sendEmail($resultingInvoiceObj,
-    //     $resultingInvoiceObj->BillEmail->Address);
-    // echo "Sent mail. Reconstructed response body below:\n";
-    // $result = json_encode($resultingMailObj, JSON_PRETTY_PRINT);
-    // print_r($result . "\n\n\n");
-
-    // /*
-    //  * 4. Receive payments for the invoice created above
-    //  */
-    // $paymentObj = Payment::create([
-    //     "CustomerRef" => [
-    //         "value" => $customerRef->Id
-    //     ],
-    //     "TotalAmt" => 500.00,
-    //     "Line" => [
-    //         "Amount" => 100.00,
-    //         "LinkedTxn" => [
-    //             "TxnId" => $invoiceId,
-    //             "TxnType" => "Invoice"
-    //         ]
-    //     ]
-    // ]);
-    // $resultingPaymentObj = $dataService->Add($paymentObj);
-    // $paymentId = $resultingPaymentObj->Id;
-    // echo "Created payment Id={$paymentId}. Reconstructed response body below:\n";
-    // $result = json_encode($resultingPaymentObj, JSON_PRETTY_PRINT);
-    // echo "<pre>";
-    // print_r($result);
-    // echo "</pre>";
+    print_r("Invoice#". $resultingInvoiceObj->DocNumber . " has been created successfully");
 
 }
 
-print_r('Called');
 $result = invoiceAndBilling();
 
 ?>

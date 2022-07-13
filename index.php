@@ -36,6 +36,10 @@ if (isset($_SESSION['sessionAccessToken'])) {
     $dataService->updateOAuth2Token($accessToken);
     $oauthLoginHelper = $dataService -> getOAuth2LoginHelper();
     // $CompanyInfo = $dataService->generateInvoice();
+
+    // Get All beauticians
+    $beauticians_array = $dataService->Query("select * from Customer");
+    // print_r($beauticians_array);
 }
 
 ?>
@@ -86,30 +90,30 @@ if (isset($_SESSION['sessionAccessToken'])) {
 
         var apiCall = function() {
             this.generateInvoice = function() {
-                
+
                 var jobCode      = document.getElementById("jobCode").value;
-                var CustomerName = document.getElementById("CustomerName").value;
+                var beautician_id = document.getElementById("beautician").value;
                 $.ajax({
                     type: "POST",
                     url: "apiCall.php",
-                    data:{jobCode : jobCode, CustomerName : CustomerName},
+                    data:{jobCode : jobCode, beautician_id : beautician_id},
                 }).done(function( msg ) {
                     $( '#apiCall' ).html( msg );
                 });
             }
 
             this.clearData = function() {
-                
-                var jobCode      = document.getElementById("jobCode");
-                var CustomerName = document.getElementById("CustomerName");
-                
-                jobCode.value      = null;
-                CustomerName.value = null;
-                
+
+                var jobCode       = document.getElementById("jobCode");
+                var text_message  = document.getElementById("apiCall");
+
+                jobCode.value           = null;
+                text_message.innerText  = null;
+
             }
 
             this.generate = function() {
-              
+
                 $.ajax({
                     type: "GET",
                     url: "apiCall.php",
@@ -166,9 +170,40 @@ if (isset($_SESSION['sessionAccessToken'])) {
 
     <h2>Generate Invoice</h2>
     <p>If there is no access token or the access token is invalid, click either the <b>Connect to QuickBooks</b> button above.</p>
-    
+
+    <label for="beautician">Enter Job Code</label>
     <input type="text" id="jobCode" placeholder="JobCode"/>
-    <input type="text" id="CustomerName" placeholder="BeauticianName"/>
+    <!-- <input type="text" id="CustomerName" placeholder="BeauticianName"/> -->
+
+    <label for="beautician">Choose a Beautician</label>
+
+    <select name="beautician" id="beautician">
+    <?php
+
+        foreach ($beauticians_array as $key => $beautician) {
+            $id   = 0;
+            $name = '';
+
+            foreach($beautician as $key => $myObjectValues){
+                if($key == 'Id'){$id = $myObjectValues;}
+                if($key == 'CompanyName'){$name =  $myObjectValues;}
+
+                if($id != 0 && $name != '' )
+                {
+
+                ?>
+                <option value="<?php echo $id ?>"><?php echo $name ?></option>
+
+                <?php
+                    $id   = 0;
+                    $name = '';
+
+                }
+            }
+    }
+    ?>
+    </select>
+
     <button  type="button" class="btn btn-success" onclick="apiCall.generateInvoice()">Generate Invoice</button>
     <button  type="button" class="btn btn-warning" onclick="apiCall.clearData()">Clear</button>
 
